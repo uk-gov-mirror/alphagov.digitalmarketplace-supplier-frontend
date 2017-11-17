@@ -1750,7 +1750,7 @@ class TestJoinOpenFrameworkNotificationMailingList(BaseApplicationTest):
                 "email_address": "squinting@ger.ty",
             },
         )
-        assert response.status_code == 503
+        assert response.status_code == 400
         doc = html.fromstring(response.get_data(as_text=True), base_url="/suppliers/mailing-list")
 
         assert mailchimp_client_instance.subscribe_new_email_to_list.called is True

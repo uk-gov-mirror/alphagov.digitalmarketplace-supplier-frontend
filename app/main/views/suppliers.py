@@ -513,7 +513,7 @@ def join_open_framework_notification_mailing_list():
             else:
                 # failure
                 flash("mailing_list_signup_error", "error")
-                status = 503
+                status = 400
                 # fall through to re-display form with error
         else:
             status = 400
