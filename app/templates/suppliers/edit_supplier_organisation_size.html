@@ -24,18 +24,19 @@
 {% block main_content %}
 
 <div class="single-question-page">
-  {% if form.errors %}
-    {% with errors = [{'question': form.organisation_size.label, 'input_name': form.organisation_size.name}] %}
-      {% include 'toolkit/forms/validation.html' %}
-    {% endwith %}
-  {% endif %}
-  
-  {% with heading = "What size is your organisation?",
-          smaller = True %}
-    {% include "toolkit/page-heading.html" %}
-  {% endwith %}
   <div class="grid-row">
     <div class="column-two-thirds">
+  
+      {% if form.errors %}
+        {% with errors = [{'question': form.organisation_size.label, 'input_name': form.organisation_size.name}] %}
+          {% include 'toolkit/forms/validation.html' %}
+        {% endwith %}
+      {% endif %}
+      
+      {% with heading = "What size is your organisation?", smaller = True %}
+        {% include "toolkit/page-heading.html" %}
+      {% endwith %}
+      
       <form method="POST" action="{{ url_for('.edit_supplier_organisation_size') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         {% set hint %}
