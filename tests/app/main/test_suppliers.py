@@ -719,7 +719,7 @@ class TestSupplierDetails(BaseApplicationTest):
 
             assert document.xpath(
                 "//a[normalize-space(string())=$t][@href=$u][contains(@class, $c)]",
-                t="Edit",
+                t="Change",
                 u="/suppliers/details/edit",
                 c="summary-change-link",
             )
@@ -798,6 +798,19 @@ class TestSupplierDetails(BaseApplicationTest):
 
             res = self.client.get("/suppliers/details")
             assert res.status_code == 200
+
+    def test_field_requires_answer_if_empty(self, data_api_client):
+        data_api_client.get_supplier.return_value = get_supplier(registeredName=None)
+
+        with self.app.test_client():
+            self.login()
+
+            res = self.client.get("/suppliers/details")
+            assert res.status_code == 200
+            page_html = res.get_data(as_text=True)
+            document = html.fromstring(page_html)
+            # TODO: make the xpath more specific
+            assert document.xpath("//*[normalize-space(string())='Answer required']")
 
 
 @mock.patch("app.main.views.suppliers.data_api_client", autospec=True)
