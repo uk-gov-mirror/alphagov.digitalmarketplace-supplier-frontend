@@ -799,8 +799,17 @@ class TestSupplierDetails(BaseApplicationTest):
             res = self.client.get("/suppliers/details")
             assert res.status_code == 200
 
-    def test_field_requires_answer_if_empty(self, data_api_client):
-        data_api_client.get_supplier.return_value = get_supplier(registeredName=None)
+    @pytest.mark.parametrize(
+        "question,null_attribute",
+        [
+            ("Registered company name", {"registeredName": None}),
+            ("Trading status", {"tradingStatus": None}),
+            ("Organisation size", {"organisationSize": None}),
+            ("VAT number", {"vatNumber": None}),
+        ]
+    )
+    def test_question_field_requires_answer_if_empty(self, data_api_client, question, null_attribute):
+        data_api_client.get_supplier.return_value = get_supplier(**null_attribute)
 
         with self.app.test_client():
             self.login()
@@ -809,8 +818,7 @@ class TestSupplierDetails(BaseApplicationTest):
             assert res.status_code == 200
             page_html = res.get_data(as_text=True)
             document = html.fromstring(page_html)
-            # TODO: make the xpath more specific
-            assert document.xpath("//*[normalize-space(string())='Answer required']")
+            assert document.xpath("//span[text()='{}']/following::td[1]/span/a[text()='Answer required']".format(question))
 
 
 @mock.patch("app.main.views.suppliers.data_api_client", autospec=True)

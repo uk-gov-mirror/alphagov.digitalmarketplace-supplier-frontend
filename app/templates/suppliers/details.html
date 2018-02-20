@@ -96,7 +96,8 @@
           postcode = postcode,
           street_address = True,
           street_address_line_1 = street_address_line_1,
-          locality = locality
+          locality = locality,
+          country = country_name
         %}
           {% include "toolkit/contact-details.html" %}
         {% endwith %}
@@ -113,24 +114,10 @@
     {% endcall %}
   {% endif %}
 
-  {% if supplier.registrationCountry and not supplier.companiesHouseNumber %}
-    {% call summary.row() %}
-      {{ summary.field_name('Where your business was established') }}
-      {{ summary.text(country_name) }}
-    {% endcall %}
-  {% endif %}
-
   {% if supplier.otherCompanyRegistrationNumber and not supplier.companiesHouseNumber and country_name != 'United Kingdom' %}
     {% call summary.row() %}
       {{ summary.field_name('Registration number') }}
       {{ summary.text(supplier.otherCompanyRegistrationNumber) }}
-    {% endcall %}
-  {% endif %}
-
-  {% if supplier.dunsNumber %}
-    {% call summary.row() %}
-      {{ summary.field_name('DUNS number') }}
-      {{ summary.text(supplier.dunsNumber) }}
     {% endcall %}
   {% endif %}
 
@@ -152,6 +139,13 @@
     {% call summary.row() %}
       {{ summary.field_name('Company size') }}
       {{ summary.text(supplier.organisationSize|capitalize_first) }}
+    {% endcall %}
+  {% endif %}
+
+  {% if supplier.dunsNumber %}
+    {% call summary.row() %}
+      {{ summary.field_name('DUNS number') }}
+      {{ summary.text(supplier.dunsNumber) }}
     {% endcall %}
   {% endif %}
 
