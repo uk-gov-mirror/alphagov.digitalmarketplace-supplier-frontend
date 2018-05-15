@@ -1,4 +1,5 @@
 import re
+from functools import wraps
 
 from flask import Flask, request, redirect, session, abort
 from flask_login import LoginManager
@@ -7,9 +8,9 @@ from flask_wtf.csrf import CSRFProtect, CSRFError
 import dmapiclient
 from dmutils import init_app, flask_featureflags
 from dmutils.user import User
+from dmutils.timing import logged_duration
 
 from config import configs
-
 
 data_api_client = dmapiclient.DataAPIClient()
 login_manager = LoginManager()
@@ -77,6 +78,19 @@ def create_app(config_name):
 
     application.add_template_filter(question_references)
     application.add_template_filter(parse_document_upload_time)
+
+    def log_duration(method_name, fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            with logged_duration(message="Call to `{}` finished in {{duration_real}}s of real-time".format(method_name),
+                                 condition=None):
+                return fn(*args, **kwargs)
+
+        return wrapper
+
+    data_api_client_method_names = [x for x in dmapiclient.DataAPIClient.__dict__.keys() if callable(getattr(dmapiclient.DataAPIClient, x))]
+    for method_name in data_api_client_method_names:
+        setattr(data_api_client, method_name, log_duration(method_name, getattr(data_api_client, method_name)))
 
     return application
 

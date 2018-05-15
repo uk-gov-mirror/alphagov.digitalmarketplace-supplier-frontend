@@ -1,5 +1,6 @@
 # coding=utf-8
 from itertools import chain
+from time import sleep
 
 from flask import render_template, request, redirect, url_for, abort, session, Markup, flash
 from flask_login import current_user, current_app
@@ -44,6 +45,12 @@ JOIN_OPEN_FRAMEWORK_NOTIFICATION_MAILING_LIST_ERROR_MESSAGE = Markup("""
     The service is unavailable at the moment. If the problem continues please contact
     <a href="mailto:enquiries@digitalmarketplace.service.gov.uk">enquiries@digitalmarketplace.service.gov.uk</a>
 """)
+
+
+@main.route('/sleepy', methods=['GET'])
+def sleepy():
+    sleep(25)
+    return 'Finished sleeping', 200
 
 
 @main.route('')
