@@ -151,7 +151,7 @@ class DunsNumberForm(FlaskForm):
 
 
 class EmailAddressForm(FlaskForm):
-    email_address = DMStripWhitespaceStringField('Email address', validators=[
+    email_address = DMStripWhitespaceStringField("Your email address", validators=[
         InputRequired(message="You must provide an email address."),
         EmailValidator(message="You must provide a valid email address."),
     ])

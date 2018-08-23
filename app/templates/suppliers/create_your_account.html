@@ -40,15 +40,9 @@
     </div>
     <form method="POST" action="{{ url_for('.create_your_account') }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-      {%
-        with
-          question = "Your email address",
-          name = "email_address",
-          value = email_address,
-          error = errors.get("email_address", {}).get("message", None)
-      %}
-        {% include "toolkit/forms/textbox.html" %}
-      {% endwith %}
+
+      {{ form.email_address }}
+
       {%
         with
           type = "save",
