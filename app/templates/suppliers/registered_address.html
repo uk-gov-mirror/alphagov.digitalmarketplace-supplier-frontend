@@ -50,10 +50,11 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      {{ forms.question_textbox('address1', 'Building and street', value=registered_address_form.address1.data, errors=registered_address_form.address1.errors) }}
-      {{ forms.question_textbox('city', 'Town or city', value=registered_address_form.city.data, errors=registered_address_form.city.errors) }}
-      {{ forms.question_textbox('postcode', 'Postcode', value=registered_address_form.postcode.data, errors=registered_address_form.postcode.errors) }}
+      {{ registered_address_form.address1 }}
+      {{ registered_address_form.city }}
+      {{ registered_address_form.postcode }}
 
+      {# TODO: make sure this is using the standard GOV.UK design system location autocomplete #}
       {% if registered_country_form.registrationCountry.errors %}
       <div class="validation-wrapper">
         <style>
@@ -64,7 +65,7 @@
 
       <div class="question" id="registrationCountry">
         <span class="question-heading" id="country-label">Country</span>
-        {{ forms.field_errors('registrationCountry', errors=registered_country_form.registrationCountry.errors) }}
+        {{ forms.field_errors(registered_country_form.registrationCountry.name, errors=registered_country_form.registrationCountry.errors) }}
         <select name="registrationCountry" id="location-autocomplete" class="location-autocomplete-fallback">
         {% if not registered_country_form.registrationCountry.data %}
           <option value="" selected="selected"></option>

@@ -177,17 +177,22 @@ def confirm_supplier_details():
 @main.route('/registered-address/edit', methods=['GET', 'POST'])
 @login_required
 def edit_registered_address():
-    supplier = data_api_client.get_supplier(
-        current_user.supplier_id
-    )['suppliers']
-    supplier['contact'] = supplier['contactInformation'][0]
+    supplier = data_api_client.get_supplier(current_user.supplier_id)['suppliers']
+    contact = supplier['contactInformation'][0]
 
-    registered_address_form = EditRegisteredAddressForm()
-    registered_country_form = EditRegisteredCountryForm()
+    prefill_data = {
+        "address1": contact.get("address1"),
+        "city": contact.get("city"),
+        "postcode": contact.get("postcode"),
+        "registrationCountry": supplier.get("registrationCountry"),
+    }
+
+    registered_address_form = EditRegisteredAddressForm(data=prefill_data)
+    registered_country_form = EditRegisteredCountryForm(data=prefill_data)
 
     if request.method == 'POST':
-        address_valid = registered_address_form.validate_on_submit()
-        country_valid = registered_country_form.validate_on_submit()
+        address_valid = registered_address_form.validate()
+        country_valid = registered_country_form.validate()
 
         if address_valid and country_valid:
             data_api_client.update_supplier(
@@ -198,19 +203,12 @@ def edit_registered_address():
 
             data_api_client.update_contact_information(
                 current_user.supplier_id,
-                supplier['contact']['id'],
+                contact['id'],
                 remove_csrf_token(registered_address_form.data),
                 current_user.email_address
             )
 
             return redirect(url_for(".supplier_details"))
-
-    else:
-        registered_address_form.address1.data = supplier['contact'].get('address1')
-        registered_address_form.city.data = supplier['contact'].get('city')
-        registered_address_form.postcode.data = supplier['contact'].get('postcode')
-
-        registered_country_form.registrationCountry.data = supplier.get('registrationCountry')
 
     errors = {**get_errors_from_wtform(registered_address_form), **get_errors_from_wtform(registered_country_form)}
 
