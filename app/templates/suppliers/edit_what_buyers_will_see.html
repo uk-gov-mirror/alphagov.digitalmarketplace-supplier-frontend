@@ -49,12 +49,12 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      {{ forms.question_textbox(contact_form.contactName.name, contact_form.contactName.question, contact_form.contactName.value, contact_form.contactName.hint, errors=contact_form.contactName.errors) }}
-      {{ forms.question_textbox(contact_form.email.name, contact_form.email.question, contact_form.email.value, contact_form.email.hint, errors=contact_form.email.errors) }}
-      {{ forms.question_textbox(contact_form.phoneNumber.name, contact_form.phoneNumber.question, contact_form.phoneNumber.value, errors=contact_form.phoneNumber.errors) }}
+      {{ contact_form.contactName }}
+      {{ contact_form.email }}
+      {{ contact_form.phoneNumber }}
 
 
-      {{ forms.question_textarea(supplier_form.description.name, supplier_form.description.question, supplier_form.description.value, supplier_form.description.hint, errors=supplier_form.description.errors, max_length_in_words=supplier_form.description.widget.max_length_in_words) }}
+      {{ supplier_form.description }}
     </div>
   </div>
 
