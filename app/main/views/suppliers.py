@@ -265,8 +265,8 @@ def edit_supplier_registered_name():
 @main.route('/registration-number/edit', methods=['GET', 'POST'])
 @login_required
 def edit_supplier_registration_number():
-    form = AddCompanyRegistrationNumberForm()
     supplier = data_api_client.get_supplier(current_user.supplier_id)['suppliers']
+
     if (supplier.get("companiesHouseNumber") or supplier.get("otherCompanyRegistrationNumber")) \
             and supplier.get('companyDetailsConfirmed'):
         return (
@@ -278,12 +278,19 @@ def edit_supplier_registration_number():
             200 if request.method == 'GET' else 400
         )
 
+    prefill_data = {
+        "has_companies_house_number": "Yes" if supplier.get("companiesHouseNumber") else "No",
+        "companies_house_number": supplier.get("companiesHouseNumber"),
+        "other_company_registration_number": supplier.get("otherCompanyRegistrationNumber"),
+    }
+    form = AddCompanyRegistrationNumberForm(data=prefill_data)
+
     if request.method == 'POST':
         if form.validate_on_submit():
             if form.has_companies_house_number.data == "Yes":
                 data_api_client.update_supplier(
                     supplier_id=current_user.supplier_id,
-                    supplier={"companiesHouseNumber": form.companies_house_number.data.upper(),
+                    supplier={"companiesHouseNumber": form.companies_house_number.data,
                               "otherCompanyRegistrationNumber": None},
                     user=current_user.email_address
                 )
@@ -296,6 +303,7 @@ def edit_supplier_registration_number():
                 )
             return redirect(url_for('.supplier_details'))
         else:
+            # TODO: see if we can remove this
             current_app.logger.warning(
                 "supplieredit.fail: has-companies-house-number:{hasnum}, companies-house-number:{chnum}, "
                 "other-registered-company-number:{rnumber}, errors:{rnumber_errors}",
@@ -305,15 +313,6 @@ def edit_supplier_registration_number():
                     'rnumber': form.other_company_registration_number.data,
                     'rnumber_errors': ",".join(form.errors)
                 })
-
-    else:
-        if supplier.get('companiesHouseNumber'):
-            form.has_companies_house_number.data = "Yes"
-            form.companies_house_number.data = supplier.get('companiesHouseNumber')
-
-        elif supplier.get('otherCompanyRegistrationNumber'):
-            form.has_companies_house_number.data = "No"
-            form.other_company_registration_number.data = supplier.get('otherCompanyRegistrationNumber')
 
     errors = get_errors_from_wtform(form)
 

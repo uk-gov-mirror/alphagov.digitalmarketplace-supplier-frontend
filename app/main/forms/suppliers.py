@@ -1,8 +1,9 @@
+from flask import Markup
 from flask_wtf import FlaskForm
 from wtforms import RadioField
 from wtforms.validators import AnyOf, InputRequired, Length, Optional, Regexp, ValidationError
 
-from dmutils.forms.fields import DMStripWhitespaceStringField, DMEmailField
+from dmutils.forms.fields import DMStripWhitespaceStringField, DMEmailField, DMRadioField
 from dmutils.forms.validators import EmailValidator
 from dmutils.forms.widgets import DMTextArea
 from ..helpers.suppliers import COUNTRY_TUPLE
@@ -86,30 +87,36 @@ class AddCompanyRegisteredNameForm(FlaskForm):
 
 
 class AddCompanyRegistrationNumberForm(FlaskForm):
-    has_companies_house_number = RadioField(
+    has_companies_house_number = DMRadioField(
         "Are you registered with Companies House?",
         validators=[InputRequired(message="You need to answer this question.")],
-        choices=[('Yes', 'Yes'), ('No', 'No')]
+        choices=[("Yes", "Yes"), ("No", "No")]
     )
     companies_house_number = DMStripWhitespaceStringField(
-        'Companies House number',
-        default='',
+        "Companies House number",
+        default="",
+        hint=Markup(
+            "<a href='https://beta.companieshouse.gov.uk/search/companies'>Find your 8 digit Companies House number</a>"
+        ),
+        filters=[lambda s: s.upper()],
         validators=[
             Optional(),
-            Regexp(r'^([0-9]{2}|[A-Za-z]{2})[0-9]{6}$',
-                   message="You must provide a valid 8 character Companies House number."
-                   )
+            Regexp(r"^([0-9]{2}|[A-Za-z]{2})[0-9]{6}$",
+                   message="You must provide a valid 8 character Companies House number.")
         ]
     )
     other_company_registration_number = DMStripWhitespaceStringField(
-        'Other company registration number',
-        default='',
+        "Enter a number that can be used to identify your business"
+        " and provide details of the organisation that issued it.",
+        default="",
+        hint="For example, ‘0123456789, Unique Taxpayer Reference, HMRC, UK’",
         validators=[
             Optional(),
             Length(max=255, message="You must provide a registration number under 256 characters.")
         ]
     )
 
+    # TODO: see if we can remove this
     def validate(self):
         # If the form has been re-submitted following an error on a field which is now hidden we need to clear the
         # previously entered data before validating
