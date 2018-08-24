@@ -76,10 +76,13 @@ class EditRegisteredCountryForm(FlaskForm):
 
 # "Add" rather than "Edit" because this information can only be set once by a supplier
 class AddCompanyRegisteredNameForm(FlaskForm):
-    registered_company_name = DMStripWhitespaceStringField('Registered company name', validators=[
-        InputRequired(message="You must provide a registered company name."),
-        Length(max=255, message="You must provide a registered company name under 256 characters.")
-    ])
+    registered_company_name = DMStripWhitespaceStringField(
+        "Registered company name",
+        question_advice="This could be different to your trading name.",
+        validators=[
+            InputRequired(message="You must provide a registered company name."),
+            Length(max=255, message="You must provide a registered company name under 256 characters.")
+        ])
 
 
 class AddCompanyRegistrationNumberForm(FlaskForm):

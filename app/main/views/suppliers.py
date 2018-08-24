@@ -225,8 +225,10 @@ def edit_registered_address():
 @main.route('/registered-company-name/edit', methods=['GET', 'POST'])
 @login_required
 def edit_supplier_registered_name():
-    form = AddCompanyRegisteredNameForm()
     supplier = data_api_client.get_supplier(current_user.supplier_id)['suppliers']
+    prefill_data = {"registered_company_name": supplier.get("registeredName")}
+    form = AddCompanyRegisteredNameForm(data=prefill_data)
+
     if supplier.get("registeredName") and supplier.get('companyDetailsConfirmed'):
         return (
             render_template(
@@ -249,9 +251,6 @@ def edit_supplier_registered_name():
                     'rname': form.registered_company_name.data,
                     'rname_errors': ",".join(form.registered_company_name.errors)
                 })
-
-    else:
-        form.registered_company_name.data = supplier.get("registeredName")
 
     errors = get_errors_from_wtform(form)
 
