@@ -536,34 +536,25 @@ def duns_number():
 
 @main.route('/create/company-details', methods=['GET', 'POST'])
 def company_details():
-    form = CompanyPublicContactInformationForm()
+    prefill_data = {
+        "company_name": session.get("company_name"),
+        "contact_name": session.get("contact_name"),
+        "email_address": session.get("email_address"),
+        "phone_number": session.get("phone_number"),
+    }
+    form = CompanyPublicContactInformationForm(data=prefill_data)
 
     if request.method == "POST":
         if form.validate_on_submit():
-            session[form.company_name.name] = form.company_name.data
-            session[form.email_address.name] = form.email_address.data
-            session[form.phone_number.name] = form.phone_number.data
-            session[form.contact_name.name] = form.contact_name.data
+            session.update(remove_csrf_token(form.data))
             return redirect(url_for(".create_your_account"))
         else:
+            # TODO: see if we can remove this
             current_app.logger.warning(
                 "suppliercreate.fail: duns:{duns} {form_errors}",
                 extra={
                     'duns': session.get('duns_number'),
                     'form_errors': ",".join(chain.from_iterable(form.errors.values()))})
-
-    else:
-        if form.company_name.name in session:
-            form.company_name.data = session[form.company_name.name]
-
-        if form.contact_name.name in session:
-            form.contact_name.data = session[form.contact_name.name]
-
-        if form.email_address.name in session:
-            form.email_address.data = session[form.email_address.name]
-
-        if form.phone_number.name in session:
-            form.phone_number.data = session[form.phone_number.name]
 
     errors = get_errors_from_wtform(form)
 

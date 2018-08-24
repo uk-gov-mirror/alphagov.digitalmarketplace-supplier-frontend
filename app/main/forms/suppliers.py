@@ -144,23 +144,35 @@ class AddCompanyRegistrationNumberForm(FlaskForm):
         return valid
 
 
+# TODO: combine this form with EditSupplierInformationForm
 class CompanyPublicContactInformationForm(FlaskForm):
-    company_name = DMStripWhitespaceStringField('Company name', validators=[
-        InputRequired(message="You must provide a company name."),
-        Length(max=255, message="You must provide a company name under 256 characters.")
-    ])
-    contact_name = DMStripWhitespaceStringField('Contact name', validators=[
-        InputRequired(message="You must provide a contact name."),
-        Length(max=255, message="You must provide a contact name under 256 characters.")
-    ])
-    email_address = DMStripWhitespaceStringField('Contact email address', validators=[
-        InputRequired(message="You must provide an email address."),
-        EmailValidator(message="You must provide a valid email address."),
-    ])
-    phone_number = DMStripWhitespaceStringField('Contact phone number', validators=[
-        InputRequired(message="You must provide a phone number."),
-        Length(max=20, message="You must provide a phone number under 20 characters.")
-    ])
+    company_name = DMStripWhitespaceStringField(
+        "Company name",
+        hint=Markup("This is how buyers will see your company’s name on the Digital&nbsp;Marketplace"),
+        validators=[
+            InputRequired(message="You must provide a company name."),
+            Length(max=255, message="You must provide a company name under 256 characters.")
+        ])
+    contact_name = DMStripWhitespaceStringField(
+        "Contact name",
+        hint="This can be the name of the person or team you want buyers to contact",
+        validators=[
+            InputRequired(message="You must provide a contact name."),
+            Length(max=255, message="You must provide a contact name under 256 characters.")
+        ])
+    email_address = DMStripWhitespaceStringField(
+        "Contact email address",
+        hint="This is the email buyers will use to contact you",
+        validators=[
+            InputRequired(message="You must provide an email address."),
+            EmailValidator(message="You must provide a valid email address."),
+        ])
+    phone_number = DMStripWhitespaceStringField(
+        "Contact phone number",
+        validators=[
+            InputRequired(message="You must provide a phone number."),
+            Length(max=20, message="You must provide a phone number under 20 characters.")
+        ])
 
 
 class DunsNumberForm(FlaskForm):
