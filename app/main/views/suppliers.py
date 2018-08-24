@@ -187,6 +187,7 @@ def edit_registered_address():
         "registrationCountry": supplier.get("registrationCountry"),
     }
 
+    # TODO: we can combine these
     registered_address_form = EditRegisteredAddressForm(data=prefill_data)
     registered_country_form = EditRegisteredCountryForm(data=prefill_data)
 
@@ -245,6 +246,7 @@ def edit_supplier_registered_name():
                                             user=current_user.email_address)
             return redirect(url_for('.supplier_details'))
         else:
+            # TODO: see if we can remove this
             current_app.logger.warning(
                 "supplieredit.fail: registered-name:{rname}, errors:{rname_errors}",
                 extra={

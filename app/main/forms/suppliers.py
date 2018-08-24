@@ -117,6 +117,7 @@ class AddCompanyRegistrationNumberForm(FlaskForm):
     )
 
     # TODO: see if we can remove this
+    # https://github.com/alphagov/digitalmarketplace-supplier-frontend/commit/8ddfd94cde8b5ef6063c522b7f12d35f55af087a
     def validate(self):
         # If the form has been re-submitted following an error on a field which is now hidden we need to clear the
         # previously entered data before validating
