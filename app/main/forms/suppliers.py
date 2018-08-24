@@ -22,17 +22,7 @@ def word_length(limit=None, message=None):
     return _length
 
 
-class EditSupplierForm(FlaskForm):
-    description = DMStripWhitespaceStringField(
-        "Supplier summary",
-        hint="50 words maximum",
-        widget=DMTextArea(max_length_in_words=50),
-        validators=[
-            word_length(50, "Your summary must not be more than %d words"),
-        ])
-
-
-class EditContactInformationForm(FlaskForm):
+class EditSupplierInformationForm(FlaskForm):
     contactName = DMStripWhitespaceStringField(
         "Contact name",
         hint="This can be the name of the person or team you want buyers to contact",
@@ -52,6 +42,13 @@ class EditContactInformationForm(FlaskForm):
         validators=[
             InputRequired(message="You must provide a phone number."),
             Length(max=20, message="You must provide a phone number under 20 characters.")
+        ])
+    description = DMStripWhitespaceStringField(
+        "Supplier summary",
+        hint="50 words maximum",
+        widget=DMTextArea(max_length_in_words=50),
+        validators=[
+            word_length(50, "Your summary must not be more than %d words"),
         ])
 
 

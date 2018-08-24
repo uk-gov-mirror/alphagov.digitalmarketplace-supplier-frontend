@@ -22,10 +22,9 @@ from ..forms.suppliers import (
     CompanyPublicContactInformationForm,
     CompanyTradingStatusForm,
     DunsNumberForm,
-    EditContactInformationForm,
     EditRegisteredAddressForm,
     EditRegisteredCountryForm,
-    EditSupplierForm,
+    EditSupplierInformationForm,
     EmailAddressForm,
 )
 from ..helpers.frameworks import (
@@ -346,36 +345,40 @@ def edit_what_buyers_will_see():
     contact = supplier["contactInformation"][0]
 
     prefill_data = {
-        "description": supplier.get("description"),
         "contactName": contact.get("contactName"),
         "phoneNumber": contact.get("phoneNumber"),
         "email": contact.get("email"),
+        "description": supplier.get("description"),
     }
 
-    supplier_form = EditSupplierForm(data=prefill_data)
-    contact_form = EditContactInformationForm(data=prefill_data)
+    form = EditSupplierInformationForm(data=prefill_data)
 
-    if supplier_form.validate_on_submit() and contact_form.validate_on_submit():
+    if form.validate_on_submit():
         data_api_client.update_supplier(
             current_user.supplier_id,
-            remove_csrf_token(supplier_form.data),
+            {
+                "description": form.description.data,
+            },
             current_user.email_address
         )
 
         data_api_client.update_contact_information(
             current_user.supplier_id,
             contact["id"],
-            remove_csrf_token(contact_form.data),
+            {
+                "contactName": form.contactName.data,
+                "phoneNumber": form.phoneNumber.data,
+                "email": form.email.data,
+            },
             current_user.email_address
         )
         return redirect(url_for(".supplier_details"))
 
-    errors = {**get_errors_from_wtform(contact_form), **get_errors_from_wtform(supplier_form)}
+    errors = get_errors_from_wtform(form)
 
     return render_template(
         "suppliers/edit_what_buyers_will_see.html",
-        supplier_form=supplier_form,
-        contact_form=contact_form,
+        form=form,
         errors=errors,
     ), 200 if not errors else 400
 
