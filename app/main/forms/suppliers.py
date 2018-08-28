@@ -176,10 +176,13 @@ class CompanyPublicContactInformationForm(FlaskForm):
 
 
 class DunsNumberForm(FlaskForm):
-    duns_number = DMStripWhitespaceStringField('DUNS Number', validators=[
-        InputRequired(message="You must enter a DUNS number with 9 digits."),
-        Regexp(r'^\d{9}$', message="You must enter a DUNS number with 9 digits."),
-    ])
+    duns_number = DMStripWhitespaceStringField(
+        "DUNS Number",
+        hint="This is a 9 digit number",
+        validators=[
+            InputRequired(message="You must enter a DUNS number with 9 digits."),
+            Regexp(r'^\d{9}$', message="You must enter a DUNS number with 9 digits."),
+        ])
 
 
 class EmailAddressForm(FlaskForm):

@@ -515,6 +515,7 @@ def duns_number():
 
             form.duns_number.errors = ["DUNS number already used"]
 
+        # TODO: see if we can remove this
         current_app.logger.warning(
             "suppliercreate.fail: duns:{duns} {duns_errors}",
             extra={
