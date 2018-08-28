@@ -220,9 +220,12 @@ class CompanyOrganisationSizeForm(FlaskForm):
         },
     ]
 
-    organisation_size = RadioField('Organisation size',
-                                   validators=[InputRequired(message="You must choose an organisation size.")],
-                                   choices=[(o['value'], o['label']) for o in OPTIONS])
+    organisation_size = DMRadioField(
+        "What size is your organisation?",
+        hint="This information will be used to report on the number of contracts that go"
+        " to small and medium sized enterprises (SMEs).",
+        validators=[InputRequired(message="You must choose an organisation size.")],
+        options=OPTIONS)
 
 
 class CompanyTradingStatusForm(FlaskForm):
