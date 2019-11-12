@@ -1,1 +1,1 @@
-FROM digitalmarketplace/base-frontend:7.2.0
+FROM digitalmarketplace/base-frontend:bv-test-12-11-19-15-54
