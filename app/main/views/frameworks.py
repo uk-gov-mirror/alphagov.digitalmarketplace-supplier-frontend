@@ -341,7 +341,7 @@ def framework_submission_services(framework_slug, lot_slug):
         )
 
     with logged_duration(message="Annotated draft details in {duration_real}s"):
-        for draft in chain(drafts, complete_drafts):
+        for draft in drafts:
             draft['priceString'] = format_service_price(draft)
             sections = content_loader.get_manifest(
                 framework_slug,
