@@ -20,6 +20,10 @@ describe('create a supplier account journey', () => {
       await expect(page).toMatchElement('h1', { text: 'Create a supplier account' })
     })
 
+    test('it passes automated accessibility testing', async () => {
+      await expect(page).toPassAxeTests()
+    })
+
     test('it leads to the enter a duns number page', async () => {
       await expect(page).toClick('a', { text: 'Start' })
 
@@ -41,6 +45,10 @@ describe('create a supplier account journey', () => {
     test('it has a title and heading', async () => {
       await expect(page.title()).resolves.toContain('DUNS number')
       await expect(page).toMatchElement('h1', { text: 'Enter your DUNS number' })
+    })
+
+    test('it passes automated accesibility testing', async () => {
+      await expect(page).toPassAxeTests()
     })
 
     test('it has a form that can be filled in', async () => {
@@ -70,6 +78,10 @@ describe('create a supplier account journey', () => {
       await expect(page).toMatchElement('h1', { text: 'We found these details' })
     })
 
+    test('it passes automated accessibility testing', async () => {
+      await expect(page).toPassAxeTests()
+    })
+
     test('it has a form that can be filled in', async () => {
       await expect(page).toClick('radio', { text: 'Yes' })
     })
@@ -95,6 +107,10 @@ describe('create a supplier account journey', () => {
     test('it has a title and heading', async () => {
       await expect(page.title()).resolves.toContain('Company details')
       await expect(page).toMatchElement('h1', { text: 'Your company details' })
+    })
+
+    test('it passes automated accessibility testing', async () => {
+      await expect(page).toPassAxeTests()
     })
 
     test('it has a form that can be filled in', async () => {
@@ -129,6 +145,10 @@ describe('create a supplier account journey', () => {
       await expect(page).toMatchElement('h1', { text: 'Create login' })
     })
 
+    test('it passes automated accessibility testing', async () => {
+      await expect(page).toPassAxeTests()
+    })
+
     test('it has a form that can be filled in', async () => {
       await expect(page).toFill('input[name="email_address"]', 'zarniwoop@megadodo.example')
     })
@@ -154,6 +174,10 @@ describe('create a supplier account journey', () => {
     test('it has a title and heading', async () => {
       await expect(page.title()).resolves.toContain('Check your information')
       await expect(page).toMatchElement('h1', { text: 'Check your information' })
+    })
+
+    test('it passes automated accessibility testing', async () => {
+      await expect(page).toPassAxeTests()
     })
 
     test.skip('it leads to the activate your account page', async () => {
