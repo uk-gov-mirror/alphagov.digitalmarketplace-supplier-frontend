@@ -1,9 +1,18 @@
+const { toMatchImageSnapshot } = require('jest-image-snapshot')
+
+expect.extend({ toMatchImageSnapshot })
+
 const hostname = 'http://localhost'
 
 describe('create a supplier account journey', () => {
   describe('create a supplier account page', () => {
     test('we are on the create a supplier account page', async () => {
       await page.goto(hostname + '/suppliers/create/start')
+    })
+
+    test('visual regressions', async () => {
+      const screenshot = await page.screenshot({ fullPage: true })
+      await expect(screenshot).toMatchImageSnapshot()
     })
 
     test('it has a title and heading', async () => {
@@ -22,6 +31,11 @@ describe('create a supplier account journey', () => {
   describe('enter your duns number page', () => {
     test('we are on the enter your duns number page', async () => {
       await expect(page.url()).toEqual(hostname + '/suppliers/create/duns-number')
+    })
+
+    test('visual regressions', async () => {
+      const screenshot = await page.screenshot({ fullPage: true })
+      await expect(screenshot).toMatchImageSnapshot()
     })
 
     test('it has a title and heading', async () => {
@@ -46,6 +60,11 @@ describe('create a supplier account journey', () => {
       await expect(page.url()).toEqual(hostname + '/suppliers/create/confirm-company')
     })
 
+    test('visual regressions', async () => {
+      const screenshot = await page.screenshot({ fullPage: true })
+      await expect(screenshot).toMatchImageSnapshot()
+    })
+
     test('it has a title and heading', async () => {
       await expect(page.title()).resolves.toContain('Confirm company')
       await expect(page).toMatchElement('h1', { text: 'We found these details' })
@@ -66,6 +85,11 @@ describe('create a supplier account journey', () => {
   describe('your company details page', () => {
     test('we are on the your company details page', async () => {
       await expect(page.url()).toEqual(hostname + '/suppliers/create/company-details')
+    })
+
+    test('visual regressions', async () => {
+      const screenshot = await page.screenshot({ fullPage: true })
+      await expect(screenshot).toMatchImageSnapshot()
     })
 
     test('it has a title and heading', async () => {
@@ -95,6 +119,11 @@ describe('create a supplier account journey', () => {
       await expect(page.url()).toEqual(hostname + '/suppliers/create/account')
     })
 
+    test('visual regressions', async () => {
+      const screenshot = await page.screenshot({ fullPage: true })
+      await expect(screenshot).toMatchImageSnapshot()
+    })
+
     test('it has a title and heading', async () => {
       await expect(page.title()).resolves.toContain('Create login')
       await expect(page).toMatchElement('h1', { text: 'Create login' })
@@ -115,6 +144,11 @@ describe('create a supplier account journey', () => {
   describe('check your information page', () => {
     test('we are on the check your information page', async () => {
       await expect(page.url()).toEqual(hostname + '/suppliers/create/company-summary')
+    })
+
+    test('visual regressions', async () => {
+      const screenshot = await page.screenshot({ fullPage: true })
+      await expect(screenshot).toMatchImageSnapshot()
     })
 
     test('it has a title and heading', async () => {
