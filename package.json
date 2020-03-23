@@ -45,6 +45,7 @@
     },
     "globals": [
       "GOVUK",
+      "page",
       "spyOn"
     ]
   }
