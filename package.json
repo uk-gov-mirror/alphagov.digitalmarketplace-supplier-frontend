@@ -31,6 +31,7 @@
     "test": "standard \"gulpfile.js\" \"spec/**/*.js\" && jest"
   },
   "devDependencies": {
+    "@wordpress/jest-puppeteer-axe": "^1.6.0",
     "jest": "^24.9.0",
     "jest-image-snapshot": "^2.12.0",
     "jest-puppeteer": "^4.4.0",
@@ -38,7 +39,11 @@
     "standard": "^14.3.1"
   },
   "jest": {
-    "preset": "jest-puppeteer"
+    "preset": "jest-puppeteer",
+    "setupFilesAfterEnv": [
+      "expect-puppeteer",
+      "@wordpress/jest-puppeteer-axe"
+    ]
   },
   "standard": {
     "env": {
