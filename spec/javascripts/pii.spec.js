@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 /* eslint new-cap: ["error", { "newIsCap": false }] */
 
 describe('GOVUK.PII', () => {

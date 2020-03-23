@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 xdescribe('GOVUK.Analytics', function () {
   const $ = require('jquery')
 
