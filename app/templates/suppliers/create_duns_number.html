@@ -56,7 +56,7 @@
             a DUNS number</a> if you don&rsquo;t have one</li>
         </ul>
 
-      {% with question = "Your company DUNS number",
+      {% with question = "Your company's DUNS number",
               name = "duns_number",
               value = form.duns_number.data,
               error = errors.get("duns_number", {}).get("message", None),
