@@ -6,11 +6,12 @@ from dmutils.errors import render_error_page
 from itertools import chain
 
 from dmutils.forms.errors import govuk_errors
-from flask import request, abort, flash, redirect, url_for, current_app, session
+from flask import Markup, request, abort, flash, redirect, url_for, current_app, session
 from flask_login import current_user
 
 from dmapiclient import APIError, HTTPError
 from dmapiclient.audit import AuditTypes
+from dmcontent import govuk_frontend
 from dmcontent.questions import ContentQuestion
 from dmcontent.errors import ContentNotFoundError
 from dmcontent.utils import count_unanswered_questions
@@ -50,7 +51,8 @@ from ..helpers.frameworks import (
     returned_agreement_email_recipients,
     return_404_if_applications_closed,
     check_framework_supports_e_signature_or_404,
-    get_completed_lots, get_framework_contract_title
+    get_completed_lots, get_framework_contract_title,
+    question_references,
 )
 from ..helpers.services import (
     get_drafts,
@@ -703,6 +705,45 @@ def framework_supplier_declaration_edit(framework_slug, section_id):
 
         errors = updated_errors
 
+    # prepare the govuk-frontend macro calls for this page with some customizations
+    form_html = []
+    for question in section.questions:
+        h = govuk_frontend.from_question(question, all_answers, errors, is_page_heading=False)
+        label_or_legend = h["fieldset"]["legend"] if "fieldset" in h else h["label"]
+        params = h["params"]
+
+        # we allow question references in the question label, hint, and error message
+        label_or_legend["text"] = question_references(label_or_legend["text"], content.get_question)
+        if "hint" in params:
+            params["hint"]["text"] = question_references(h["hint"]["text"], content.get_question)
+        if "errorMessage" in params:
+            params["errorMessage"]["text"] = question_references(h["errorMessage"]["text"], content.get_question)
+
+        # we want question numbers in the label
+        label_or_legend["html"] = (
+            # @domoscargin: do we need different classes for label and legend?
+            Markup(f'<span class="dm-question-number">{question.number}</span> ')
+            + label_or_legend["text"]
+        )
+        del label_or_legend["text"]
+
+        # we add a 'message' to each question which is prefilled
+        if (
+            (question.id not in errors)
+            and name_of_framework_that_section_has_been_prefilled_from
+            and (question.id in all_answers)
+        ):
+            # this is a misuse of error message component but I can't think of a better way right now
+            params["formGroup"] = {"classes": "dm-form-group--notice"}
+            params["errorMessage"] = {
+                "classes": "dm-error-message--notice",
+                "text": "This answer is from your {} declaration".format(
+                    name_of_framework_that_section_has_been_prefilled_from),
+                "visuallyHiddenText": "Notice",
+            }
+
+        form_html.append(h)
+
     session_timeout = displaytimeformat(datetime.utcnow() + timedelta(hours=1))
     return render_template(
         "frameworks/edit_declaration_section.html",
@@ -712,8 +753,10 @@ def framework_supplier_declaration_edit(framework_slug, section_id):
         name_of_framework_that_section_has_been_prefilled_from=name_of_framework_that_section_has_been_prefilled_from,
         declaration_answers=all_answers,
         get_question=content.get_question,
+        form_html=form_html,
+        render=govuk_frontend.render,
         errors=errors,
-        session_timeout=session_timeout
+        session_timeout=session_timeout,
     ), status_code
 
 
