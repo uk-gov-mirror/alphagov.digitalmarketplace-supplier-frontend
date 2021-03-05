@@ -715,9 +715,9 @@ def framework_supplier_declaration_edit(framework_slug, section_id):
         # we allow question references in the question label, hint, and error message
         label_or_legend["text"] = question_references(label_or_legend["text"], content.get_question)
         if "hint" in params:
-            params["hint"]["text"] = question_references(h["hint"]["text"], content.get_question)
+            params["hint"]["text"] = question_references(params["hint"]["text"], content.get_question)
         if "errorMessage" in params:
-            params["errorMessage"]["text"] = question_references(h["errorMessage"]["text"], content.get_question)
+            params["errorMessage"]["text"] = question_references(params["errorMessage"]["text"], content.get_question)
 
         # we want question numbers in the label
         label_or_legend["html"] = (
