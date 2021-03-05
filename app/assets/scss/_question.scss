@@ -1,0 +1,14 @@
+/*
+ * Some of our questions display a notice (when there are no errors) informing the user when
+ * a question has been autofilled based on a previous declaration.
+ * To achieve this, we use the error message and apply some custom classes. 
+ *
+ * TODO: This is not ideal and we should review this to find a better solution.
+ */
+.dm-form-group--notice {
+    border-left: $govuk-border-width-form-group-error solid govuk-colour("blue");
+}
+
+.dm-error-message--notice {
+    color: govuk-colour("blue");
+}
