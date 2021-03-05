@@ -729,7 +729,6 @@ def framework_supplier_declaration_edit(framework_slug, section_id):
 
         # we want question numbers in the label
         label_or_legend["html"] = (
-            # @domoscargin: do we need different classes for label and legend?
             Markup(f'<span class="dm-numbered-question__number">{question.number}</span> ')
             + label_or_legend["text"]
         )
